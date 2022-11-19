@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using CRUD_Mongo_Biblioteca.Conexao;
+using CRUD_Mongo_Biblioteca.Model;
+using CRUD_Mongo_Biblioteca.Controller;
+
