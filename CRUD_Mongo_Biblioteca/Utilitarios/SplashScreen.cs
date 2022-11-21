@@ -12,6 +12,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
         private LivroController livro = new LivroController();
         private LeitorController leitor = new LeitorController();
         private AluguelController aluguel = new AluguelController();
+        private LivroAluguelController itemAluguel = new LivroAluguelController();
 
         public void Splash()
         {
@@ -26,6 +27,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
             Console.WriteLine($"#  1 - LIVROS: {livro.ContaEntidadeLivro()}");
             Console.WriteLine($"#  2 - LEITOR: {leitor.ContaEntidadeLeitor()}");
             Console.WriteLine($"#  3 - ALUGUEL: {aluguel.ContaEntidadeAluguel()}");
+            Console.WriteLine($"#  4 - LivroAluguel: {itemAluguel.ContaEntidadeLivroAluguel()}");
             Console.WriteLine("#");
 
             Console.WriteLine("# SISTEMA DESENVOLVIDO POR: \n" +
