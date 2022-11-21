@@ -13,12 +13,10 @@ namespace CRUD_Mongo_Biblioteca.Model
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        public int? CodigoAluguel { get; set; }
-        public int? QuantidadeAluguel { get; set; }
+        public int? CodigoAluguel { get; set; }        
         public int? CodigoLeitor { get; set; }
         public string? Cpf { get; set; }
-        public int? CodigoLivro { get; set; }
-        public double? ValorUnitario { get; set; }
+        public string? Nome { get; set; }
         public double? ValorTotal { get; set; }
     }
 }

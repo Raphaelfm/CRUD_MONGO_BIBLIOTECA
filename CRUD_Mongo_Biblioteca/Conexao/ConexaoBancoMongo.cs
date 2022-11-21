@@ -16,6 +16,7 @@ namespace CRUD_Mongo_Biblioteca.Conexao
         public const string NOME_DA_COLECAO_1 = "Livros";
         public const string NOME_DA_COLECAO_2 = "Leitor";
         public const string NOME_DA_COLECAO_3 = "Aluguel";
+        public const string NOME_DA_COLECAO_4 = "LivroAluguel";
 
         private static readonly IMongoClient _cliente;
         private static readonly IMongoDatabase _BaseDados;
