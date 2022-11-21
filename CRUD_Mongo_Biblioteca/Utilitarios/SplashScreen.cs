@@ -23,7 +23,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
             Console.WriteLine("##################################################");
 
             Console.WriteLine("# TOTAL DE REGISTROS EXISTENTES:");
-            Console.WriteLine($"#  1 - LIVRO: {livro.ContaEntidadeLivro()}");
+            Console.WriteLine($"#  1 - LIVROS: {livro.ContaEntidadeLivro()}");
             Console.WriteLine($"#  2 - LEITOR: {leitor.ContaEntidadeLeitor()}");
             Console.WriteLine($"#  3 - ALUGUEL: {aluguel.ContaEntidadeAluguel()}");
             Console.WriteLine("#");
