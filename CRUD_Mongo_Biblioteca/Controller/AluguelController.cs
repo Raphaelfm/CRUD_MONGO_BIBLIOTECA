@@ -18,12 +18,9 @@ namespace CRUD_Mongo_Biblioteca.Controller
         public void CadastrarAluguel()
         {
             aluguel.Id = null;
-            aluguel.CodigoAluguel = null;
-            aluguel.QuantidadeAluguel = null;
+            aluguel.CodigoAluguel = null;            
             aluguel.CodigoLeitor = null;
-            aluguel.Cpf = null;
-            aluguel.CodigoLivro = null;
-            aluguel.ValorUnitario = null;
+            aluguel.Cpf = null;            
             aluguel.ValorTotal = null;
 
             Console.WriteLine("Documento incluído com sucesso!");
