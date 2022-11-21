@@ -10,6 +10,8 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
     public class MenuInserir
     {
         private LivroController livro = new LivroController();
+        private LeitorController leitor = new LeitorController();
+        private AluguelController aluguel = new AluguelController();
 
         public void MenuInsere()
         {
@@ -32,9 +34,10 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         livro.CadastrarLivro();
                         break;
                     case 2:
-                        Console.WriteLine("Em desenvolvimento...");
+                        leitor.CadastrarLeitor();
                         break;
                     case 3:
+                        aluguel.CadastrarAluguel();
                         break;                    
                     case 5:
                         Console.WriteLine("Retornando ao menu principal...");

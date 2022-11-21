@@ -9,7 +9,10 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
 {
     public class SplashScreen
     {
-        LivroController livro = new LivroController();
+        private LivroController livro = new LivroController();
+        private LeitorController leitor = new LeitorController();
+        private AluguelController aluguel = new AluguelController();
+
         public void Splash()
         {
             Console.WriteLine("##################################################");
@@ -21,8 +24,8 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
 
             Console.WriteLine("# TOTAL DE REGISTROS EXISTENTES:");
             Console.WriteLine($"#  1 - LIVRO: {livro.ContaEntidadeLivro()}");
-            Console.WriteLine($"#  2 - LEITOR: ");
-            Console.WriteLine($"#  3 - ALUGUEL: ");
+            Console.WriteLine($"#  2 - LEITOR: {leitor.ContaEntidadeLeitor()}");
+            Console.WriteLine($"#  3 - ALUGUEL: {aluguel.ContaEntidadeAluguel()}");
             Console.WriteLine("#");
 
             Console.WriteLine("# SISTEMA DESENVOLVIDO POR: \n" +

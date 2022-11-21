@@ -12,8 +12,8 @@ namespace CRUD_Mongo_Biblioteca.Controller
 {
     public class LivroController
     {
-        Livro livro = new Livro();
-        ConexaoBancoMongo conexao = new ConexaoBancoMongo();
+        private Livro livro = new Livro();
+        private ConexaoBancoMongo conexao = new ConexaoBancoMongo();
 
         public void CadastrarLivro()
         {
@@ -71,22 +71,19 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             conexao.Livro.InsertOneAsync(livro);
             Console.WriteLine("Documento incluído com sucesso!");
+            Console.Write("Pressione qualquer tecla para continuar: ");
+            Console.ReadKey();
         }
 
         public async Task<int> GeraCodigoAsync()
         {
-            int codigo = 0;
+            int codigo = 1;
             var listaLivro = await conexao.Livro.Find(new BsonDocument()).ToListAsync();
             foreach (var doc in listaLivro)
             {
                 if (doc.CodigoLivro.HasValue)
                 {                    
                     codigo = doc.CodigoLivro.Value + 1;
-                }
-                else
-                {
-                    codigo = 1;
-                    return codigo;
                 }
             }
             return codigo;
