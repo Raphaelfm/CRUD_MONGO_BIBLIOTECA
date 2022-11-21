@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CRUD_Mongo_Biblioteca.Controller;
 
 namespace CRUD_Mongo_Biblioteca.Utilitarios
 {
     public class SplashScreen
     {
+        LivroController livro = new LivroController();
         public void Splash()
         {
             Console.WriteLine("##################################################");
@@ -18,7 +20,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
             Console.WriteLine("##################################################");
 
             Console.WriteLine("# TOTAL DE REGISTROS EXISTENTES:");
-            Console.WriteLine($"#  1 - LIVRO: ");
+            Console.WriteLine($"#  1 - LIVRO: {livro.ContaEntidadeLivro()}");
             Console.WriteLine($"#  2 - LEITOR: ");
             Console.WriteLine($"#  3 - ALUGUEL: ");
             Console.WriteLine("#");
