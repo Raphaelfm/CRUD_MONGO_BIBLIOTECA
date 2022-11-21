@@ -43,5 +43,10 @@ namespace CRUD_Mongo_Biblioteca.Conexao
         {
             get { return _BaseDados.GetCollection<Aluguel>(NOME_DA_COLECAO_3); }
         }
+
+        public IMongoCollection<LivroAluguel> LivroAluguel
+        {
+            get { return _BaseDados.GetCollection<LivroAluguel>(NOME_DA_COLECAO_4); }
+        }
     }
 }
