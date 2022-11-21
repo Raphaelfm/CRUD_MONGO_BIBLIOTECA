@@ -10,13 +10,45 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
     {
         public void MenuPrincipal()
         {
-            Console.WriteLine("Digite a opção desejada: (Somente o número da opção)");
-            Console.WriteLine();
-            Console.WriteLine("1 - Relatórios");
-            Console.WriteLine("2 - Inserir documentos");
-            Console.WriteLine("3 - Remover documentos");
-            Console.WriteLine("4 - Atualizar documentos");
-            Console.WriteLine("5 - Sair");
+            MenuInserir inserir = new MenuInserir();
+            int opcao = 0;
+            bool running = true;
+
+            while (running)
+            {
+                Console.WriteLine("Digite a opção desejada: (Somente o número da opção)");
+                Console.WriteLine();
+                Console.WriteLine("1 - Relatórios");
+                Console.WriteLine("2 - Inserir documentos");
+                Console.WriteLine("3 - Remover documentos");
+                Console.WriteLine("4 - Atualizar documentos");
+                Console.WriteLine("5 - Sair");
+
+                opcao = int.Parse(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        Console.WriteLine("Listando opções de Relatórios...");
+                        break;
+                    case 2:
+                        Console.WriteLine("Bem vindo ao cadastro de documentos...");
+                        inserir.MenuInsere();
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        Console.WriteLine("Obrigado por utilizar nosso software...");
+                        Console.WriteLine("Até a próxima...");
+                        running = false;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida, por favor digite a opção desejada conforme descrito no menu de opções.");
+                        break;
+                }
+            }
         }
         
     }
