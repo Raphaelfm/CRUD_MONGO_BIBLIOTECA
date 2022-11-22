@@ -44,7 +44,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             livro.Paginas = int.Parse(Console.ReadLine());
 
             Console.Write("Quantidade Disponível: ");
-            livro.QuantidadeDisponivel= int.Parse(Console.ReadLine());
+            livro.QuantidadeDisponivel = int.Parse(Console.ReadLine());
 
             Console.Write("Valor aluguel: ");
             livro.ValorAluguel = Double.Parse(Console.ReadLine());
@@ -65,7 +65,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 Console.WriteLine("Deseja incluir mais assuntos para este livro? 0 - Sim, 1 - Não");
                 opcao = int.Parse(Console.ReadLine());
 
-                if(opcao == 1) { insereMais= false; }
+                if (opcao == 1) { insereMais = false; }
             }
             livro.Assunto = assuntos;
 
@@ -76,19 +76,70 @@ namespace CRUD_Mongo_Biblioteca.Controller
         }
 
         public async void RelatorioLivros()
-        {            
+        {
             Console.WriteLine("Listando Documentos");
 
             var listaLivros = await conexao.Livro.Find(new BsonDocument())
                                                            .ToListAsync();
             Console.WriteLine("{0, -5} {1, -32} {2, -4} {3, -4} {4, 9}\n", "Codigo", "Titulo", "Quantidade de Páginas", "Quantidade Disponível", "Valor");
-            //Console.WriteLine("{0,-20} {1,5}\n", "Name", "Hours");
             foreach (var doc in listaLivros)
-            {                
-                Console.WriteLine("{0, -5} {1, -32} {2, 20} {3, 20} {4, 9}", doc.CodigoLivro, doc.Titulo, doc.Paginas, doc.QuantidadeDisponivel, doc.ValorAluguel);                
+            {
+                Console.WriteLine("{0, -5} {1, -32} {2, 20} {3, 20} {4, 9}", doc.CodigoLivro, doc.Titulo, doc.Paginas, doc.QuantidadeDisponivel, doc.ValorAluguel);
             }
 
             Console.WriteLine("Fim da lista...");
+        }
+
+        public void RemoveLivro()
+        {
+            int opcao = 0;
+            int codigo = 0;
+            Console.WriteLine("Verifique o código do livro que deseja remover na lista abaixo: ");
+            RelatorioLivros();
+            Thread.Sleep(2000);
+            Console.WriteLine();
+            Console.Write("Informe o código do livro que deseja remover: ");
+            codigo = int.Parse(Console.ReadLine());
+
+            Console.Write("Tem certeza que deseja excluir esse registro? 1 - Sim, 0 - Não");
+            opcao = int.Parse(Console.ReadLine());
+            if (opcao == 1)
+            {
+                ExcluiLivro(codigo);
+                Thread.Sleep(2000);
+            }
+            else
+            {
+                Console.WriteLine("Retornando ao menu de opções...");
+                Console.WriteLine("Pressione qualquer tecla para continuar... ");
+                Console.ReadKey();
+            }
+
+        }
+
+        public async void ExcluiLivro(int codigo)
+        {
+            var construtor = Builders<Livro>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
+
+            Console.WriteLine("Excluindo livros");
+            await conexao.Livro.DeleteOneAsync(condicao);
+        }
+
+        public async Task<int> VerificaRegistro(int codigo)
+        {
+            int existe = 0;
+            var construtor = Builders<LivroAluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
+
+            var listaLivros = await conexao.Livro.Find(new BsonDocument()).ToListAsync();
+
+            if (listaLivros.Any())
+            {
+                existe = 1;
+            }
+
+            return existe;
         }
 
         public async Task<int> GeraCodigoAsync()
@@ -98,7 +149,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             foreach (var doc in listaLivro)
             {
                 if (doc.CodigoLivro.HasValue)
-                {                    
+                {
                     codigo = doc.CodigoLivro.Value + 1;
                 }
             }
