@@ -75,9 +75,20 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
-        public void RelatorioLivros()
-        {
+        public async void RelatorioLivros()
+        {            
+            Console.WriteLine("Listando Documentos");
 
+            var listaLivros = await conexao.Livro.Find(new BsonDocument())
+                                                           .ToListAsync();
+            Console.WriteLine("{0, -5} {1, -32} {2, -4} {3, -4} {4, 9}\n", "Codigo", "Titulo", "Quantidade de Páginas", "Quantidade Disponível", "Valor");
+            //Console.WriteLine("{0,-20} {1,5}\n", "Name", "Hours");
+            foreach (var doc in listaLivros)
+            {                
+                Console.WriteLine("{0, -5} {1, -32} {2, 20} {3, 20} {4, 9}", doc.CodigoLivro, doc.Titulo, doc.Paginas, doc.QuantidadeDisponivel, doc.ValorAluguel);                
+            }
+
+            Console.WriteLine("Fim da lista...");
         }
 
         public async Task<int> GeraCodigoAsync()

@@ -31,7 +31,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                 {
                     case 1:
                         Console.WriteLine("Listando opções de Relatórios...");
-                        relatorios.MenuRelatorios();
+                        relatorios.MenuRelatorio();
                         break;
                     case 2:
                         Console.WriteLine("Bem vindo ao cadastro de documentos...");
