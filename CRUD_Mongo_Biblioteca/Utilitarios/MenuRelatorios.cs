@@ -39,9 +39,15 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         break;
                     case 2:
                         leitor.RelatorioLeitores();
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Pressione qualquer tecla para limpara a tela e continuar");
+                        Console.ReadKey();
                         break;
                     case 3:
                         aluguel.RelatorioAlugueis();
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Pressione qualquer tecla para limpara a tela e continuar");
+                        Console.ReadKey();
                         break;
                     case 5:
                         Console.WriteLine("Retornando ao menu principal...");
