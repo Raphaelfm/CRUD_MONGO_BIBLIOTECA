@@ -14,7 +14,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
         private LeitorController leitor = new LeitorController();
         private AluguelController aluguel = new AluguelController();
 
-        public void MenuRelatorios()
+        public void MenuRelatorio()
         {
             int opcao = 0;
             bool running = true;
@@ -33,6 +33,9 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                 {
                     case 1:
                         livro.RelatorioLivros();
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Pressione qualquer tecla para limpara a tela e continuar");
+                        Console.ReadKey();
                         break;
                     case 2:
                         leitor.RelatorioLeitores();
