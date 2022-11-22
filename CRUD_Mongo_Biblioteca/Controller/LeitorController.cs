@@ -48,7 +48,6 @@ namespace CRUD_Mongo_Biblioteca.Controller
             var listaLeitores = await conexao.Leitor.Find(new BsonDocument())
                                                            .ToListAsync();
             Console.WriteLine("{0, -5} {1, -32} {2, 12} \n", "Codigo", "Nome", "CPF");
-            //Console.WriteLine("{0,-20} {1,5}\n", "Name", "Hours");
             foreach (var doc in listaLeitores)
             {
                 Console.WriteLine("{0, -5} {1, -32} {2, 20}", doc.CodigoLeitor, doc.Nome, doc.Cpf);
