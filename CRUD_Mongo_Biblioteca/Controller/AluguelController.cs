@@ -26,6 +26,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             aluguel.Id = null;
             aluguel.CodigoAluguel = null;            
             aluguel.CodigoLeitor = null;
+            aluguel.Nome = null;
             aluguel.Cpf = null;            
             aluguel.ValorTotal = 0;
 
@@ -61,9 +62,20 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
-        public void RelatorioAlugueis()
+        public async void RelatorioAlugueis()
         {
+            Console.WriteLine("Listando Documentos");
 
+            var listaAluguel = await conexao.Aluguel.Find(new BsonDocument())
+                                                           .ToListAsync();
+            Console.WriteLine("{0, -7} {1, -12} {2, -32} {3, -12} {4, 12}\n", "Codigo", "C. Leitor", "Nome", "CPF", "Valor Total");
+            //Console.WriteLine("{0,-20} {1,5}\n", "Name", "Hours");
+            foreach (var doc in listaAluguel)
+            {
+                Console.WriteLine("{0, -7} {1, -12} {2, -32} {3, -12} {4, 12}", doc.CodigoAluguel, doc.CodigoLeitor, doc.Nome, doc.Cpf, doc.ValorTotal);
+            }
+
+            Console.WriteLine("Fim da lista...");
         }
 
         public async Task<int> GeraCodigoAsync()
