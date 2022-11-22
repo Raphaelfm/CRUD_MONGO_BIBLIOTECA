@@ -61,6 +61,11 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        public void RelatorioAlugueis()
+        {
+
+        }
+
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
