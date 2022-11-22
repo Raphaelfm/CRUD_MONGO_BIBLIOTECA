@@ -11,6 +11,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
         public void MenuPrincipal()
         {
             MenuInserir inserir = new MenuInserir();
+            MenuRelatorios relatorios = new MenuRelatorios();
             int opcao = 0;
             bool running = true;
 
@@ -30,6 +31,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                 {
                     case 1:
                         Console.WriteLine("Listando opções de Relatórios...");
+                        relatorios.MenuRelatorios();
                         break;
                     case 2:
                         Console.WriteLine("Bem vindo ao cadastro de documentos...");

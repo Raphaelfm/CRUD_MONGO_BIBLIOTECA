@@ -20,39 +20,57 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public void CadastrarLivroAluguel()
         {
-            itemAluguel.CodigoAluguel = null;
-            itemAluguel.QuantidadeLivro = null;
-            itemAluguel.CodigoLivro = null;
-            itemAluguel.ValorUnitarioLivro = null;
-            itemAluguel.ValorTotalLivro = null;
-
+            bool running = true;
+            int opcao = 0;
             Console.WriteLine("Bem vindo ao cadastro de aluguel de livros, a seguir informe os dados conforme solicitado!");
             Console.WriteLine();
-            Console.WriteLine("Veja abaixo as informações necessárias, e cadastre os dados conforme codigos de livros: ");            
-            Console.WriteLine();
-            Console.WriteLine("Listando Livros...");
-            Console.WriteLine();
-            ListarLivros();
-            Thread.Sleep(1000);
-            Console.WriteLine();
+            while(running)
+            {
+                itemAluguel.CodigoAluguel = null;
+                itemAluguel.QuantidadeLivro = null;
+                itemAluguel.CodigoLivro = null;
+                itemAluguel.Titulo = null;
+                itemAluguel.ValorUnitarioLivro = null;
+                itemAluguel.ValorTotalLivro = null;
 
-            Console.WriteLine("Insira as informações conforme os dados apresentados: ");
-            itemAluguel.CodigoAluguel = PegaCodigoAluguel().Result;
-            Thread.Sleep(1000);
-            Console.Write("Codigo Livro: ");
-            string codigo = Console.ReadLine();
-            itemAluguel.CodigoLivro = int.Parse(codigo);
+                Console.WriteLine("Veja abaixo as informações necessárias, e cadastre os dados conforme codigos de livros: ");
+                Console.WriteLine();
+                Console.WriteLine("Listando Livros...");
+                Console.WriteLine();
+                ListarLivros();
+                Thread.Sleep(1000);
+                Console.WriteLine();
 
-            Console.Write("Quantidade que está sendo alugada: ");
-            itemAluguel.QuantidadeLivro = int.Parse(Console.ReadLine());
+                Console.WriteLine("Insira as informações conforme os dados apresentados: ");
+                itemAluguel.CodigoAluguel = PegaCodigoAluguel().Result;
+                Thread.Sleep(1000);
+                Console.Write("Codigo Livro: ");
+                string codigo = Console.ReadLine();
+                itemAluguel.CodigoLivro = int.Parse(codigo);
+                itemAluguel.Titulo = PegaTituloLivro(int.Parse(codigo)).Result;
+                Thread.Sleep(1000);
+
+                Console.Write("Quantidade que está sendo alugada: ");
+                itemAluguel.QuantidadeLivro = int.Parse(Console.ReadLine());
+
+                itemAluguel.ValorUnitarioLivro = PegaValorLivro(int.Parse(codigo)).Result;
+                Thread.Sleep(1000);
+                itemAluguel.ValorTotalLivro = itemAluguel.QuantidadeLivro * itemAluguel.ValorUnitarioLivro;
+
+                conexao.LivroAluguel.InsertOneAsync(itemAluguel);
+                Console.WriteLine("Documento incluído com sucesso!");
+
+                Console.WriteLine("Deseja incluir outro livro ao aluguel? 1 - Sim, 0 - Não (Digite apenas o número da opção)");
+                opcao = int.Parse(Console.ReadLine());
+
+                if (opcao == 0) { 
+                    Console.WriteLine("Encerrando pedido...");
+                    running = false;
+                }
+            }
             
-            itemAluguel.ValorUnitarioLivro = PegaValorLivro(int.Parse(codigo)).Result;
-            Thread.Sleep(1000);
-            itemAluguel.ValorTotalLivro = itemAluguel.QuantidadeLivro * itemAluguel.ValorUnitarioLivro;
 
-            conexao.LivroAluguel.InsertOneAsync(itemAluguel);
-
-            Console.WriteLine("Documento incluído com sucesso!");
+            
             Console.Write("Pressione qualquer tecla para continuar: ");
             Console.ReadKey();
         }
@@ -105,6 +123,22 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             return valor;
+        }
+
+        public async Task<string> PegaTituloLivro(int codigo)
+        {
+            var construtor = Builders<Livro>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
+            string titulo = "";
+            var listaLeitores = await conexao.Livro.Find(condicao)
+                                                           .ToListAsync();
+
+            foreach (var doc in listaLeitores)
+            {
+                titulo = doc.Titulo;
+            }
+
+            return titulo;
         }
     }
 }
