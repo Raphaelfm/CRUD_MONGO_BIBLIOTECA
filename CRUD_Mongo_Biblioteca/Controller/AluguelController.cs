@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CRUD_Mongo_Biblioteca.Conexao;
 using CRUD_Mongo_Biblioteca.Model;
 using MongoDB.Driver;
+using DnsClient.Internal;
 
 namespace CRUD_Mongo_Biblioteca.Controller
 {    
@@ -17,6 +18,8 @@ namespace CRUD_Mongo_Biblioteca.Controller
         private Leitor leitor = new Leitor();
         private LeitorController leitores = new LeitorController();
         private Livro livro = new Livro();
+        private LivroController livros = new LivroController();
+        private LivroAluguelController itemAluguel = new LivroAluguelController();
 
         public void CadastrarAluguel()
         {
@@ -34,7 +37,24 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine();
             Console.WriteLine("Listanto Leitores...");
             Console.WriteLine();
-            ListaLeitores();
+            ListarLeitoresAsync();
+            Thread.Sleep(1000);
+
+            Console.WriteLine("Insira as informações conforme os dados apresentados: ");
+            aluguel.CodigoAluguel = GeraCodigoAsync().Result;
+            Console.WriteLine("Codigo do Leitor: ");
+            string codigoLeitor = Console.ReadLine();
+            aluguel.CodigoLeitor = int.Parse(codigoLeitor);
+            int co = int.Parse(codigoLeitor);
+            string cpf = PegaCpfLeitor(co).Result;
+            Thread.Sleep(1000);
+            aluguel.Cpf = cpf;
+            aluguel.Nome = PegaNomeLeitor(co).Result;
+            Thread.Sleep(1000);
+            aluguel.ValorTotal = 0;
+
+            conexao.Aluguel.InsertOneAsync(aluguel);
+            itemAluguel.CadastrarLivroAluguel();
 
             Console.WriteLine("Documento incluído com sucesso!");
             Console.Write("Pressione qualquer tecla para continuar: ");
@@ -65,14 +85,50 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public async void ListaLeitores()
         {
-            var listaLivros = await conexao.Leitor.Find(new BsonDocument())
+            var listaLeitores = await conexao.Leitor.Find(new BsonDocument())
                                                            .ToListAsync();
             int quantidade = leitores.ContaEntidadeLeitor();
-            string[] livros = new string[quantidade];
-            foreach (var doc in listaLivros)
+            foreach (var doc in listaLeitores)
             {
                 Console.WriteLine($"Codigo Leitor: {doc.CodigoLeitor} | Nome Leitor: {doc.Nome} | CPF Leitor: {doc.Cpf}");                  
             }
+        }       
+
+        public void ListarLeitoresAsync()
+        {
+            ListaLeitores();
+        }        
+
+        public async Task<string> PegaCpfLeitor(int codigo)
+        {
+            var construtor = Builders<Leitor>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+            string cpf = "";
+            var listaLeitores = await conexao.Leitor.Find(condicao)
+                                                           .ToListAsync();
+
+            foreach(var doc in listaLeitores)
+            {
+                cpf = doc.Cpf;
+            }
+
+            return cpf;
+        }
+
+        public async Task<string> PegaNomeLeitor(int codigo)
+        {
+            var construtor = Builders<Leitor>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+            string nome = "";
+            var listaLeitores = await conexao.Leitor.Find(condicao)
+                                                           .ToListAsync();
+
+            foreach (var doc in listaLeitores)
+            {
+                nome = doc.Nome;
+            }
+
+            return nome;
         }
     }
 }
