@@ -26,6 +26,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine();
             while(running)
             {
+                itemAluguel.Id = null;
                 itemAluguel.CodigoAluguel = null;
                 itemAluguel.QuantidadeLivro = null;
                 itemAluguel.CodigoLivro = null;
