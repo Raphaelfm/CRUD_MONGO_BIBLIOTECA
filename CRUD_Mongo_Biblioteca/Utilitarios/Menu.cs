@@ -12,6 +12,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
         {
             MenuInserir inserir = new MenuInserir();
             MenuRelatorios relatorios = new MenuRelatorios();
+            MenuRemover remover = new MenuRemover();
             int opcao = 0;
             bool running = true;
 
@@ -38,6 +39,8 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         inserir.MenuInsere();
                         break;
                     case 3:
+                        Console.WriteLine("Informe o que deseja excluir...");
+                        remover.MenuRemoverDados();
                         break;
                     case 4:
                         break;
