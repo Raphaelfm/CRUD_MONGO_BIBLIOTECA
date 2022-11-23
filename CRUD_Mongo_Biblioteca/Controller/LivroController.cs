@@ -17,13 +17,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public void CadastrarLivro()
         {
-            livro.Id = null;
-            livro.CodigoLivro = null;
-            livro.Titulo = null;
-            livro.Autor = null;
-            livro.Ano = null;
-            livro.Paginas = null;
-            livro.Assunto = null;
+            AplicaNulos();
 
             var codigo = GeraCodigoAsync();
 
@@ -92,6 +86,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public void RemoveLivro()
         {
+            AplicaNulos();
             int aluguel = 0;
             int verificador = 0;
             int opcao = 0;
@@ -147,22 +142,24 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         }
 
-        public async void ExcluiLivro(int codigo)
+        public void ExcluiLivro(int codigo)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
             Console.WriteLine("Excluindo livros");
-            await conexao.Livro.DeleteOneAsync(condicao);
+            conexao.Livro.DeleteOneAsync(condicao);
+            Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
 
-        public async void ExcluiLivroAluguel(int codigo)
+        public void ExcluiLivroAluguel(int codigo)
         {
             var construtor = Builders<LivroAluguel>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
             Console.WriteLine("Excluindo livros de Aluguel");
-            await conexao.LivroAluguel.DeleteOneAsync(condicao);
+            conexao.LivroAluguel.DeleteOneAsync(condicao);
         }
 
         //Verifica se o livro que o usuário está tentando excluir existe em algum aluguel de livros
@@ -244,6 +241,17 @@ namespace CRUD_Mongo_Biblioteca.Controller
             var livros = conexao.Livro.CountDocuments(new BsonDocument());
             quantidadeLivro = (int)livros;
             return quantidadeLivro;
+        }
+
+        public void AplicaNulos()
+        {
+            livro.Id = null;
+            livro.CodigoLivro = null;
+            livro.Titulo = null;
+            livro.Autor = null;
+            livro.Ano = null;
+            livro.Paginas = null;
+            livro.Assunto = null;
         }
     }
 }

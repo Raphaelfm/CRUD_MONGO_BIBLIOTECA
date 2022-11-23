@@ -26,14 +26,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine();
             while(running)
             {
-                itemAluguel.Id = null;
-                itemAluguel.CodigoAluguel = null;
-                itemAluguel.CodigoLeitor = null;
-                itemAluguel.QuantidadeLivro = null;
-                itemAluguel.CodigoLivro = null;
-                itemAluguel.Titulo = null;
-                itemAluguel.ValorUnitarioLivro = null;
-                itemAluguel.ValorTotalLivro = null;
+                AplicaNulos();
 
                 Console.WriteLine("Veja abaixo as informações necessárias, e cadastre os dados conforme codigos de livros: ");
                 Console.WriteLine();
@@ -156,6 +149,18 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             return titulo;
+        }
+
+        public void AplicaNulos()
+        {
+            itemAluguel.Id = null;
+            itemAluguel.CodigoAluguel = null;
+            itemAluguel.CodigoLeitor = null;
+            itemAluguel.QuantidadeLivro = null;
+            itemAluguel.CodigoLivro = null;
+            itemAluguel.Titulo = null;
+            itemAluguel.ValorUnitarioLivro = null;
+            itemAluguel.ValorTotalLivro = null;
         }
     }
 }

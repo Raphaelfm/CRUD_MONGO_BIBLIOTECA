@@ -21,14 +21,10 @@ namespace CRUD_Mongo_Biblioteca.Controller
         private LivroController livros = new LivroController();
         private LivroAluguelController itemAluguel = new LivroAluguelController();
 
+
         public void CadastrarAluguel()
         {
-            aluguel.Id = null;
-            aluguel.CodigoAluguel = null;            
-            aluguel.CodigoLeitor = null;
-            aluguel.Nome = null;
-            aluguel.Cpf = null;            
-            aluguel.ValorTotal = 0;
+            AplicaNulos();
 
             var codigo = GeraCodigoAsync();
 
@@ -75,6 +71,62 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             Console.WriteLine("Fim da lista...");
+        }
+
+        public void RemoveAluguel()
+        {
+            AplicaNulos();
+            int opcao = 0;
+            int codigo = 0;
+            Console.WriteLine("Verifique o código do aluguel que deseja remover na lista abaixo: ");
+            RelatorioAlugueis();
+            Thread.Sleep(2000);
+            Console.WriteLine();
+            Console.Write("Informe o código do aluguel que deseja remover: ");
+            codigo = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Tem certeza que deseja excluir esse registro? 1 - Sim, 0 - Não");
+            opcao = int.Parse(Console.ReadLine());
+
+            if (opcao == 1)
+            {
+                Console.WriteLine("Removendo este alguel, os itens associados ao mesmo serão removidos de LivroAluguel também.");
+                Console.Write("Deseja realemente continuar? 1 - Sim, 0 - Não (Digite apenas o número da opção: )");
+                opcao = int.Parse(Console.ReadLine());
+                if (opcao == 1)
+                {
+                    ExcluiLivro(codigo);
+                    Thread.Sleep(2000);
+                    ExcluiAluguel(codigo);
+                    Thread.Sleep(2000);
+                }                
+            }
+            Console.WriteLine("Retornando ao menu de opções...");
+            Console.WriteLine("Pressione qualquer tecla para continuar... ");
+            Console.ReadKey();
+        }
+
+        public void ExcluiAluguel(int codigo)
+        {
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoAluguel, codigo);
+
+            Console.WriteLine("Excluindo Aluguel...");
+            conexao.Aluguel.DeleteOneAsync(condicao);
+            Console.WriteLine("Aluguel excluido com sucesso! \nPressione qualquer tecla para continuar... ");
+            Console.ReadKey();
+        }
+
+        //Exclui o livro assosiado ao aluguel de LivroAlugel
+        public void ExcluiLivro(int codigo)
+        {
+            var construtor = Builders<LivroAluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoAluguel, codigo);
+
+            Console.WriteLine("Limpando registros de livros referentes ao aluguel excluido...");
+            conexao.LivroAluguel.DeleteManyAsync(condicao);
+            Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
 
         public async Task<int> GeraCodigoAsync()
@@ -145,6 +197,16 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             return nome;
+        }
+
+        private void AplicaNulos()
+        {
+            aluguel.Id = null;
+            aluguel.CodigoAluguel = null;
+            aluguel.CodigoLeitor = null;
+            aluguel.Nome = null;
+            aluguel.Cpf = null;
+            aluguel.ValorTotal = 0;
         }
     }
 }
