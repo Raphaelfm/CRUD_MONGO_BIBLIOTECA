@@ -14,6 +14,7 @@ namespace CRUD_Mongo_Biblioteca.Model
         public string? Id { get; set; }
 
         public int? CodigoAluguel { get; set; }
+        public int? CodigoLeitor { get; set; }
         public int? QuantidadeLivro { get; set; }
         public int? CodigoLivro { get; set; }
         public string? Titulo { get; set; }

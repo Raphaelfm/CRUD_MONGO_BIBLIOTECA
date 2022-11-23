@@ -56,6 +56,119 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        public void RemoverLeitores()
+        {
+            int aluguel = 0;
+            int verificador = 0;
+            int opcao = 0;
+            int codigo = 0;
+            Console.WriteLine("Verifique o código do Leitor que deseja remover na lista abaixo: ");
+            RelatorioLeitores();
+            Thread.Sleep(2000);
+            Console.WriteLine();
+            Console.Write("Informe o código do leitor que deseja remover: ");
+            codigo = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Tem certeza que deseja excluir esse registro? 1 - Sim, 0 - Não");
+            opcao = int.Parse(Console.ReadLine());
+            verificador = VerificaRegistro(codigo);
+            Thread.Sleep(2000);
+            if (opcao == 1)
+            {
+                if (verificador == 1)
+                {
+                    Console.WriteLine("O registro que você está tentando excluir está vinculado a um aluguel.");
+                    Console.WriteLine("Para excluir o registro, será necessário excluir também do aluguel que o mesmo está vinculado.");
+                    Console.WriteLine("Deseja excluir mesmo assim? 1 - Sim, 0 - Não");
+                    opcao = int.Parse(Console.ReadLine());
+                    if (opcao == 1)
+                    {
+                        VerificaRegistroAluguel(codigo);
+                        Thread.Sleep(2000);
+                        ExcluiLeitor(codigo);
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Retornando ao menu...");
+                        Console.WriteLine("Pressione qualquer tecla para continuar");
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Excluindo Registro...");
+                    ExcluiLeitor(codigo);
+                    Thread.Sleep(2000);
+                    Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Retornando ao menu de opções...");
+                Console.WriteLine("Pressione qualquer tecla para continuar... ");
+                Console.ReadKey();
+            }
+        }
+
+        public async void ExcluiLeitor(int codigo)
+        {
+            var construtor = Builders<Leitor>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+
+            Console.WriteLine("Excluindo Leitor...");
+            await conexao.Leitor.DeleteOneAsync(condicao);
+            Console.WriteLine("Leitor excluido com sucesso! \nPressione qualquer tecla para continuar... ");
+            Console.ReadKey();
+        }
+
+        //Verifica se o leitor que o usuário está tentando excluir existe em algum aluguel de livros
+        public int VerificaRegistro(int codigo)
+        {
+            int existe = 0;
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+
+            var listaLeitor = conexao.Aluguel.Find(new BsonDocument()).ToListAsync();
+
+            if (listaLeitor.Result.Any())
+            {
+                existe = 1;
+            }
+
+            return existe;
+        }
+
+        //Verifica o aluguel que o Leitor está vinculado e exclui os livros do aluguel e também o aluguel
+        public async void VerificaRegistroAluguel(int codigo)
+        {
+            int existe = 0;
+            int codigoAluguel = 0;
+            var construtor = Builders<LivroAluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+
+            var listaLivros = await conexao.LivroAluguel.Find(condicao).ToListAsync();
+
+            Console.WriteLine("Excluindo Livros de Aluguel");
+            Console.WriteLine();
+            await conexao.LivroAluguel.DeleteManyAsync(condicao);
+            Console.WriteLine("Livros de Aluguel vinculados ao leitor excluidos com sucesso!");
+            Console.WriteLine("Pressione qualquer tecla para continuar... ");
+            Console.ReadKey();
+
+            var construtor1 = Builders<Aluguel>.Filter;
+            var condicao1 = construtor1.Eq(x => x.CodigoLeitor, codigo);
+
+            Console.WriteLine("Excluindo Aluguel");
+            await conexao.Aluguel.DeleteManyAsync(condicao1);
+
+            Console.WriteLine("Aluguel Excluido com sucesso!");
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
+
+        }
+
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
@@ -65,7 +178,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 if (doc.CodigoLeitor.HasValue)
                 {
                     codigo = doc.CodigoLeitor.Value + 1;
-                }                
+                }
             }
             return codigo;
         }

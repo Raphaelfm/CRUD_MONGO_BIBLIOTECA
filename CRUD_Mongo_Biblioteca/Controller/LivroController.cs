@@ -103,7 +103,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.Write("Informe o código do livro que deseja remover: ");
             codigo = int.Parse(Console.ReadLine());
 
-            Console.Write("Tem certeza que deseja excluir esse registro? 1 - Sim, 0 - Não");
+            Console.WriteLine("Tem certeza que deseja excluir esse registro? 1 - Sim, 0 - Não");
             opcao = int.Parse(Console.ReadLine());
             verificador = VerificaRegistro(codigo);
             Thread.Sleep(2000);
@@ -112,7 +112,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 if(verificador == 1)
                 {
                     Console.WriteLine("O registro que você está tentando excluir está vinculado a um aluguel.");
-                    Console.WriteLine("Para excluir o registro, seré necessário excluir o mesmo do aluguel que o mesmo está vinculado.");
+                    Console.WriteLine("Para excluir o registro, será necessário excluir o mesmo do aluguel que o mesmo está vinculado.");
                     Console.WriteLine("Deseja excluir mesmo assim? 1 - Sim, 0 - Não");
                     opcao = int.Parse(Console.ReadLine());
                     if (opcao == 1)
@@ -165,6 +165,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             await conexao.LivroAluguel.DeleteOneAsync(condicao);
         }
 
+        //Verifica se o livro que o usuário está tentando excluir existe em algum aluguel de livros
         public int VerificaRegistro(int codigo)
         {
             int existe = 0;
@@ -173,7 +174,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             var listaLivros = conexao.LivroAluguel.Find(new BsonDocument()).ToListAsync();
 
-            if (listaLivros != null)
+            if (listaLivros.Result.Any())
             {
                 existe = 1;
             }
@@ -181,7 +182,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return existe;
         }
 
-        //Verifica se no aluguel existe algum livro associado
+        //Verifica se no aluguel existe algum livro associado além do livro que está sendo excluído para determinar se o aluguel será excluido
         public async void VerificaRegistroAluguel(int codigo)
         {       
             int existe = 0;
