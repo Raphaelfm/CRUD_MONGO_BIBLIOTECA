@@ -46,7 +46,12 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         Console.ReadKey();
                         break;
                     case 3:
-                        aluguel.RelatorioAlugueis();
+                        aluguel.RemoveAluguel();
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Pressione qualquer tecla para limpara a tela e continuar");
+                        Console.ReadKey();
+                        break;
+                    case 4:
                         Thread.Sleep(2000);
                         Console.WriteLine("Pressione qualquer tecla para limpara a tela e continuar");
                         Console.ReadKey();
