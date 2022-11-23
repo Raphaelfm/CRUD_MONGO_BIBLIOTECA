@@ -28,6 +28,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             {
                 itemAluguel.Id = null;
                 itemAluguel.CodigoAluguel = null;
+                itemAluguel.CodigoLeitor = null;
                 itemAluguel.QuantidadeLivro = null;
                 itemAluguel.CodigoLivro = null;
                 itemAluguel.Titulo = null;
@@ -44,6 +45,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
                 Console.WriteLine("Insira as informações conforme os dados apresentados: ");
                 itemAluguel.CodigoAluguel = PegaCodigoAluguel().Result;
+                itemAluguel.CodigoLeitor = PegaCodigoLeitorl().Result;
                 Thread.Sleep(1000);
                 Console.Write("Codigo Livro: ");
                 string codigo = Console.ReadLine();
@@ -105,6 +107,20 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 if (doc.CodigoAluguel.HasValue)
                 {
                     codigo = doc.CodigoAluguel.Value;
+                }
+            }
+            return codigo;
+        }
+
+        public async Task<int> PegaCodigoLeitorl()
+        {
+            int codigo = 1;
+            var listaAlugel = await conexao.Aluguel.Find(new BsonDocument()).ToListAsync();
+            foreach (var doc in listaAlugel)
+            {
+                if (doc.CodigoLeitor.HasValue)
+                {
+                    codigo = doc.CodigoLeitor.Value;
                 }
             }
             return codigo;
