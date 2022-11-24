@@ -222,8 +222,74 @@ namespace CRUD_Mongo_Biblioteca.Controller
         }
 
         public void AlteraLivro()
-        {
+        {            
+            int opcao = 0;
+            int codigo = 0;
+            bool running = true;
 
+            while (running)
+            {
+                AplicaNulos();
+                Console.WriteLine("Verifique o código do Livro que deseja alterar na lista abaixo: ");
+                Console.WriteLine();
+                RelatorioLivros();
+                Thread.Sleep(2000);
+                Console.WriteLine();
+                Console.WriteLine("Informe o campo que deseja alterar: (informe somente o número da opção)");
+                Console.WriteLine();
+                Console.WriteLine("1 - Alterar Autor");
+                Console.WriteLine("2 - Alterar Ano do Livro");
+                Console.WriteLine("3 - Alterar Quantidade de Páginas");
+                Console.WriteLine("4 - Alterar Quantidade Disponível");
+                Console.WriteLine("5 - Alterar Valor do Aluguel");
+                Console.WriteLine("6 - Alterar Assunto");
+                Console.WriteLine("7 - Voltar ao menu de opções anterior");
+                opcao = int.Parse(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        Console.WriteLine("Informe o codigo do livro que deseja alterar: ");
+                        codigo = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Digite o Novo Autor");
+                        string novoAutor = Console.ReadLine();
+                        AtualizarAutor(codigo, novoAutor);
+                        Console.WriteLine();
+                        Console.WriteLine("Registro atualizado com sucesso!");
+                        Console.Write("Pressione qualquer tecla para continuar... ");
+                        Console.ReadKey();
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        Console.WriteLine("Voltando para o menu de opções...");
+                        Thread.Sleep(2000);
+                        running = false;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválidade \nVerifique a opção desejada e tente novamente...");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                        running = false;
+                        break;
+                }
+
+                Console.Write("Deseja atualizar outro campo? 1 - Sim, 0 - Não (Digite apenas o número para Sim ou Não): ");
+                opcao = int.Parse(Console.ReadLine());
+                if(opcao == 0)
+                {
+                    Console.WriteLine("Retornando ao menu de opções... ");
+                    running = false;
+                }
+            }            
         }
 
         public async Task<int> GeraCodigoAsync()
@@ -257,6 +323,23 @@ namespace CRUD_Mongo_Biblioteca.Controller
             livro.Ano = null;
             livro.Paginas = null;
             livro.Assunto = null;
+        }
+
+        public async void AtualizarAutor(int codigo, string novoAutor)
+        {
+            var construtor = Builders<Livro>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
+
+            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+
+            foreach (var doc in listaLivros)
+            {
+                doc.Autor = novoAutor;
+                //Método do update no C# com mongo
+                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Autor": novoAutor});
+                await conexao.Livro.ReplaceOneAsync(condicao, doc);
+            }
         }
     }
 }
