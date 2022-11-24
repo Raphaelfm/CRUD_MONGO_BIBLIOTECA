@@ -13,6 +13,7 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
             MenuInserir inserir = new MenuInserir();
             MenuRelatorios relatorios = new MenuRelatorios();
             MenuRemover remover = new MenuRemover();
+            MenuAtualizar atualizar = new MenuAtualizar();
             int opcao = 0;
             bool running = true;
 
@@ -43,6 +44,8 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         remover.MenuRemoverDados();
                         break;
                     case 4:
+                        Console.WriteLine("Informe o que deseja atualizar...");
+                        atualizar.MenuAtualizacoes();
                         break;
                     case 5:
                         Console.WriteLine("Obrigado por utilizar nosso software...");

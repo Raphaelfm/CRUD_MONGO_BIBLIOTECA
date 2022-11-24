@@ -164,6 +164,11 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         }
 
+        public void AlteraLeitor()
+        {
+
+        }
+
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;

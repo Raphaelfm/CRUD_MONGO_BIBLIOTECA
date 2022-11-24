@@ -237,6 +237,11 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return valor;
         }
 
+        public void AlteraLivroAluguel()
+        {
+
+        }
+
         public async Task<string> PegaTituloLivro(int codigo)
         {
             var construtor = Builders<Livro>.Filter;

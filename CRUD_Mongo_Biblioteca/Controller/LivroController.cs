@@ -221,6 +221,11 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        public void AlteraLivro()
+        {
+
+        }
+
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
