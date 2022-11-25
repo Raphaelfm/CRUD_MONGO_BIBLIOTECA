@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,7 +167,77 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public void AlteraLeitor()
         {
+            int opcao = 0;
+            int codigo = 0;
+            bool running = true;
 
+            while (running)
+            {
+                AplicaNulos();
+                Console.WriteLine("Verifique o código do Leitor que deseja alterar na lista abaixo: ");
+                Console.WriteLine();
+                RelatorioLeitores();
+                Thread.Sleep(2000);
+                Console.WriteLine();
+                Console.WriteLine("Informe o campo que deseja alterar: (informe somente o número da opção)");
+                Console.WriteLine();
+                Console.WriteLine("1 - Alterar Nome");
+                Console.WriteLine("2 - Alterar CPF");
+                Console.WriteLine("3 - Voltar ao menu de opções anterior");
+                opcao = int.Parse(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        Console.WriteLine("Informe o codigo do leitor que deseja alterar: ");
+                        codigo = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Digite o novo Nome para o Leitor: ");
+                        string novoNome = Console.ReadLine();
+                        AtualizarNomeLeitor(codigo, novoNome);
+                        Console.WriteLine();
+                        Console.WriteLine("Registro atualizado com sucesso!");
+                        Console.Write("Pressione qualquer tecla para continuar... ");
+                        Console.ReadKey();
+                        break;
+                    case 2:
+                        Console.WriteLine("Informe o codigo do leitor que deseja alterar: ");
+                        codigo = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Digite o novo CPF para o Leitor: ");
+                        string novoCpf = Console.ReadLine();
+                        AtualizarCpfLeitor(codigo, novoCpf);
+                        Console.WriteLine();
+                        Console.WriteLine("Registro atualizado com sucesso!");
+                        Console.Write("Pressione qualquer tecla para continuar... ");
+                        Console.ReadKey();
+                        break;                    
+                    case 3:
+                        Console.WriteLine("Voltando para o menu de opções...");
+                        Thread.Sleep(2000);
+                        running = false;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválidade \nVerifique a opção desejada e tente novamente...");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                        running = false;
+                        break;
+                }
+
+                if (opcao == 7)
+                {
+                    running = false;
+                }
+                else
+                {
+                    Console.Write("Deseja atualizar outro campo? 1 - Sim, 0 - Não (Digite apenas o número para Sim ou Não): ");
+                    opcao = int.Parse(Console.ReadLine());
+                    if (opcao == 0)
+                    {
+                        Console.WriteLine("Retornando ao menu de opções... ");
+                        running = false;
+                    }
+                }
+            }
         }
 
         public async Task<int> GeraCodigoAsync()
@@ -197,6 +268,64 @@ namespace CRUD_Mongo_Biblioteca.Controller
             leitor.CodigoLeitor = null;
             leitor.Nome = null;
             leitor.Cpf = null;
+        }
+
+        public async void AtualizarNomeLeitor(int codigo, string novoNome)
+        {
+            var construtor = Builders<Leitor>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+
+            var listaLivros = await conexao.Leitor.Find(condicao).ToListAsync();
+
+            foreach (var doc in listaLivros)
+            {
+                doc.Nome = novoNome;
+                //Método do update no C# com mongo
+                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+
+                //db.Livro.update("CodigoLeitor": codigo, {"$set": {"Nome": novoNome});
+                await conexao.Leitor.ReplaceOneAsync(condicao, doc);
+                AlteraNomeLeitorAluguel(codigo, novoNome);
+            }
+        }
+
+        public async void AtualizarCpfLeitor(int codigo, string novoCpf)
+        {
+            var construtor = Builders<Leitor>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
+
+            var listaLeitores = await conexao.Leitor.Find(condicao).ToListAsync();
+
+            foreach (var doc in listaLeitores)
+            {
+                doc.Cpf = novoCpf;
+                //Método do update no C# com mongo
+                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+
+                //db.Livro.update("CodigoLeitor": codigo, {"$set": {"Nome": novoNome});
+                await conexao.Leitor.ReplaceOneAsync(condicao, doc);
+                AlteraCpfLeitorAluguel(codigo, novoCpf);
+            }
+        }
+
+        public async void AlteraNomeLeitorAluguel(int codigoLeitor, string? nome)
+        {
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigoLeitor);
+
+            var construtorAlteracao = Builders<Aluguel>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Nome, nome);
+            await conexao.Aluguel.UpdateManyAsync(condicao, condicaoAlteracao);
+        }
+
+        public async void AlteraCpfLeitorAluguel(int codigoLeitor, string? cpf)
+        {
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoLeitor, codigoLeitor);
+
+            var construtorAlteracao = Builders<Aluguel>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Cpf, cpf);
+            await conexao.Aluguel.UpdateManyAsync(condicao, condicaoAlteracao);
         }
     }
 }
