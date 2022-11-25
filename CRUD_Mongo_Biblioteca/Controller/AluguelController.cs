@@ -131,7 +131,65 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         public void AlteraAluguel()
         {
+            int opcao = 0;
+            int codigo = 0;
+            bool running = true;
 
+            while (running)
+            {
+                AplicaNulos();
+                Console.WriteLine("Verifique o código do Aluguel que deseja alterar na lista abaixo: ");
+                Console.WriteLine();
+                RelatorioAlugueis();
+                Thread.Sleep(2000);
+                Console.WriteLine();
+                Console.WriteLine("Informe a opção desejada: (informe somente o número da opção)");
+                Console.WriteLine();
+                Console.WriteLine("1 - Alterar Leitor");
+                Console.WriteLine("2 - Voltar ao menu de opções anterior");
+                opcao = int.Parse(Console.ReadLine());
+
+                switch (opcao)
+                {
+                    case 1:
+                        Console.WriteLine("Informe o codigo do Aluguel que deseja alterar: ");
+                        codigo = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Digite o codigo do novo Leitor: ");
+                        int novoLeitor = int.Parse(Console.ReadLine());
+                        AlterarLeitorAluguel(codigo, novoLeitor);
+                        Console.WriteLine();
+                        Console.WriteLine("Registro atualizado com sucesso!");
+                        Console.Write("Pressione qualquer tecla para continuar... ");
+                        Console.ReadKey();
+                        break;                    
+                    case 2:
+                        Console.WriteLine("Voltando para o menu de opções...");
+                        Thread.Sleep(2000);
+                        running = false;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválidade \nVerifique a opção desejada e tente novamente...");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                        running = false;
+                        break;
+                }
+
+                if (opcao == 2)
+                {
+                    running = false;
+                }
+                else
+                {
+                    Console.Write("Deseja atualizar outro campo? 1 - Sim, 0 - Não (Digite apenas o número para Sim ou Não): ");
+                    opcao = int.Parse(Console.ReadLine());
+                    if (opcao == 0)
+                    {
+                        Console.WriteLine("Retornando ao menu de opções... ");
+                        running = false;
+                    }
+                }
+            }
         }
 
         public async Task<int> GeraCodigoAsync()
@@ -212,6 +270,36 @@ namespace CRUD_Mongo_Biblioteca.Controller
             aluguel.Nome = null;
             aluguel.Cpf = null;
             aluguel.ValorTotal = 0;
+        }
+
+        public async void AlterarLeitorAluguel(int? codigoAluguel, int? codigoNovoLeitor)
+        {
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoAluguel, codigoAluguel);
+
+            var construtorLeitor = Builders<Leitor>.Filter;
+            var condicaoLeitor = construtorLeitor.Eq(l => l.CodigoLeitor, codigoNovoLeitor);
+
+            var listaLeitor = await conexao.Leitor.Find(condicaoLeitor).ToListAsync();
+
+            var construtorAlteracao = Builders<Aluguel>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.CodigoLeitor, codigoNovoLeitor);
+            await conexao.Aluguel.UpdateOneAsync(condicao, condicaoAlteracao);
+
+            foreach (var doc in listaLeitor)
+            {
+                doc.Nome = doc.Nome;
+                doc.Cpf = doc.Cpf;
+
+                var construtorAlteracaoLeitor = Builders<Aluguel>.Update;
+                var condicaoAlteracaoNomeLeitor = construtorAlteracaoLeitor.Set(x => x.Nome, doc.Nome);
+                await conexao.Aluguel.UpdateOneAsync(condicao, condicaoAlteracaoNomeLeitor);
+
+                var condicaoAlteracaoLeitorCpf = construtorAlteracaoLeitor.Set(x => x.Cpf, doc.Cpf);
+                await conexao.Aluguel.UpdateOneAsync(condicao, condicaoAlteracaoLeitorCpf);
+            }
+
+            
         }
     }
 }
