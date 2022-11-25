@@ -327,12 +327,19 @@ namespace CRUD_Mongo_Biblioteca.Controller
                         break;
                 }
 
-                Console.Write("Deseja atualizar outro campo? 1 - Sim, 0 - Não (Digite apenas o número para Sim ou Não): ");
-                opcao = int.Parse(Console.ReadLine());
-                if(opcao == 0)
+                if (opcao == 7)
                 {
-                    Console.WriteLine("Retornando ao menu de opções... ");
                     running = false;
+                }
+                else
+                {
+                    Console.Write("Deseja atualizar outro campo? 1 - Sim, 0 - Não (Digite apenas o número para Sim ou Não): ");
+                    opcao = int.Parse(Console.ReadLine());
+                    if (opcao == 0)
+                    {
+                        Console.WriteLine("Retornando ao menu de opções... ");
+                        running = false;
+                    }
                 }
             }            
         }
