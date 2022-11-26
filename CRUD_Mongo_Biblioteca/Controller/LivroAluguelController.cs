@@ -55,7 +55,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
                 conexao.LivroAluguel.InsertOneAsync(itemAluguel);
                 Console.WriteLine("Documento incluído com sucesso!");
-
+                ValorTotalAluguel(PegaCodigoAluguel().Result);
                 Console.WriteLine("Deseja incluir outro livro ao aluguel? 1 - Sim, 0 - Não (Digite apenas o número da opção)");
                 opcao = int.Parse(Console.ReadLine());
 
@@ -421,6 +421,30 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             Console.WriteLine("Fim da lista...");
+        }
+
+        public async void ValorTotalAluguel(int codigo)
+        {
+            double? valorTotal = 0;
+            var construtor = Builders<Aluguel>.Filter;
+            var condicao = construtor.Eq(x => x.CodigoAluguel, codigo);
+
+            var listaAluguel = await conexao.Aluguel.Find(condicao).ToListAsync();
+
+            var construtor1 = Builders<LivroAluguel>.Filter;
+            var condicao1 = construtor1.Eq(x => x.CodigoAluguel, codigo);
+
+            var listaLivros = await conexao.LivroAluguel.Find(condicao1).ToListAsync();
+
+            foreach (var doc in listaLivros)
+            {
+                valorTotal = valorTotal + doc.ValorTotalLivro;
+            }
+
+            var construtorAlteracao = Builders<Aluguel>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.ValorTotal, valorTotal);
+            await conexao.Aluguel.UpdateOneAsync(condicao, condicaoAlteracao);
+
         }
     }
 }
