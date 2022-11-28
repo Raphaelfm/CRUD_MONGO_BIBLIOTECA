@@ -21,7 +21,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
         private LivroController livros = new LivroController();
         private LivroAluguelController itemAluguel = new LivroAluguelController();
 
-
+        //Método para cadastrar um novo aluguel
         public void CadastrarAluguel()
         {
             AplicaNulos();
@@ -58,6 +58,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        //Chama um relatório de alugueis
         public async void RelatorioAlugueis()
         {
             Console.WriteLine("Listando Documentos");
@@ -73,6 +74,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        //Menu para remover alugueis
         public void RemoveAluguel()
         {
             AplicaNulos();
@@ -99,13 +101,16 @@ namespace CRUD_Mongo_Biblioteca.Controller
                     Thread.Sleep(2000);
                     ExcluiAluguel(codigo);
                     Thread.Sleep(2000);
+                    Console.WriteLine("Registro excluído com sucesso!");
                 }                
             }
-            Console.WriteLine("Retornando ao menu de opções...");
-            Console.WriteLine("Pressione qualquer tecla para continuar... ");
-            Console.ReadKey();
+            else
+            {
+                Console.WriteLine("Retornando ao menu de opções...");
+            }            
         }
 
+        //Método para excluir um aluguel conforme solicitado pelo usuário
         public void ExcluiAluguel(int codigo)
         {
             var construtor = Builders<Aluguel>.Filter;
@@ -113,8 +118,6 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             Console.WriteLine("Excluindo Aluguel...");
             conexao.Aluguel.DeleteOneAsync(condicao);
-            Console.WriteLine("Aluguel excluido com sucesso! \nPressione qualquer tecla para continuar... ");
-            Console.ReadKey();
         }
 
         //Exclui o livro assosiado ao aluguel de LivroAlugel
@@ -125,10 +128,9 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             Console.WriteLine("Limpando registros de livros referentes ao aluguel excluido...");
             conexao.LivroAluguel.DeleteManyAsync(condicao);
-            Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
         }
 
+        //Menu de atualização de aluguel
         public void AlteraAluguel()
         {
             int opcao = 0;
@@ -192,6 +194,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        //Gera um código para cada Aluguel cadastrado em ordem crescente
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
@@ -206,6 +209,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return codigo;
         }
 
+        //Conta a quantidade de registros na entidade Aluguel
         public int ContaEntidadeAluguel()
         {
             int quantidadeAluguel = 0;
@@ -230,6 +234,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             ListaLeitores();
         }        
 
+        //Pega o cpf do leitor na entidade Leitor, o usuário precisa apenas informar o código do leitor
         public async Task<string> PegaCpfLeitor(int codigo)
         {
             var construtor = Builders<Leitor>.Filter;
@@ -246,6 +251,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return cpf;
         }
 
+        //Pega o nome do leitor na entidade Leitor, o usuário precisa apenas informar o código do leitor
         public async Task<string> PegaNomeLeitor(int codigo)
         {
             var construtor = Builders<Leitor>.Filter;
@@ -262,6 +268,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return nome;
         }
 
+        //Limpa os atributos atribuindo nulos
         private void AplicaNulos()
         {
             aluguel.Id = null;
@@ -272,6 +279,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             aluguel.ValorTotal = 0;
         }
 
+        //Método para alterar o leitor na entidade aluguel, basta o usuário informar corretamente o codigo do aluguel e codigo do novo leitor
         public async void AlterarLeitorAluguel(int? codigoAluguel, int? codigoNovoLeitor)
         {
             var construtor = Builders<Aluguel>.Filter;

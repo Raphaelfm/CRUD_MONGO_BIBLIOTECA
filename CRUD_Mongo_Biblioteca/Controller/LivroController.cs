@@ -15,6 +15,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
         private Livro livro = new Livro();        
         private ConexaoBancoMongo conexao = new ConexaoBancoMongo();
 
+        //Contém métodos e para cadastrar livros
         public void CadastrarLivro()
         {
             AplicaNulos();
@@ -69,6 +70,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        //Traz um relatório de livros cadastrados
         public async void RelatorioLivros()
         {
             Console.WriteLine("Listando Documentos");
@@ -84,6 +86,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        //Menu para remover livros cadastrados
         public void RemoveLivro()
         {
             AplicaNulos();
@@ -120,8 +123,6 @@ namespace CRUD_Mongo_Biblioteca.Controller
                     else
                     {
                         Console.WriteLine("Retornando ao menu...");
-                        Console.WriteLine("Pressione qualquer tecla para continuar");
-                        Console.ReadKey();
                     }
                 }
                 else
@@ -129,37 +130,35 @@ namespace CRUD_Mongo_Biblioteca.Controller
                     Console.WriteLine("Excluindo Registro...");
                     ExcluiLivro(codigo);
                     Thread.Sleep(2000);
-                    Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
                 }                
             }
             else
             {
                 Console.WriteLine("Retornando ao menu de opções...");
-                Console.WriteLine("Pressione qualquer tecla para continuar... ");
-                Console.ReadKey();
             }
 
         }
 
+        //Método que faz a exclusão dos livros
         public void ExcluiLivro(int codigo)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            Console.WriteLine("Excluindo livros");
+            Console.WriteLine("Excluindo registro da entidade livros");
             conexao.Livro.DeleteOneAsync(condicao);
-            Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
+            Console.WriteLine("Registro excluido com sucesso!");
         }
 
+        //Método que faz a exclusão do livro de aluguéis caso o mesmo esteja associado a um aluguel
         public void ExcluiLivroAluguel(int codigo)
         {
             var construtor = Builders<LivroAluguel>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            Console.WriteLine("Excluindo livros de Aluguel");
+            Console.WriteLine("Excluindo livros da entidade Aluguel");
             conexao.LivroAluguel.DeleteOneAsync(condicao);
+            Console.WriteLine("Registro excluído com sucesso!");
         }
 
         //Verifica se o livro que o usuário está tentando excluir existe em algum aluguel de livros
@@ -169,7 +168,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             var construtor = Builders<LivroAluguel>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = conexao.LivroAluguel.Find(new BsonDocument()).ToListAsync();
+            var listaLivros = conexao.LivroAluguel.Find(condicao).ToListAsync();
 
             if (listaLivros.Result.Any())
             {
@@ -216,11 +215,10 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 await conexao.Aluguel.DeleteOneAsync(condicao1);
 
                 Console.WriteLine("Aluguel Excluido com sucesso!");
-                Console.WriteLine("Pressione qualquer tecla para continuar...");
-                Console.ReadKey();
             }
         }
 
+        //Menu de alteração de livros
         public void AlteraLivro()
         {            
             int opcao = 0;
@@ -344,6 +342,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }            
         }
 
+        //Gera um código para cada livro cadastrado em ordem crescente
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
@@ -358,6 +357,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return codigo;
         }
 
+        //Conta a quantidade de registros na entidade livro
         public int ContaEntidadeLivro()
         {
             int quantidadeLivro = 0;
@@ -366,6 +366,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return quantidadeLivro;
         }
 
+        //Limpa os atributos atribuindo nulos
         public void AplicaNulos()
         {
             livro.Id = null;
@@ -377,96 +378,88 @@ namespace CRUD_Mongo_Biblioteca.Controller
             livro.Assunto = null;
         }
 
+        //Método para atualizar o autor conforme o livro escolhido pelo usuário
         public async void AtualizarAutor(int codigo, string novoAutor)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+            //Método do update no C# com mongo
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-            foreach (var doc in listaLivros)
-            {
-                doc.Autor = novoAutor;
-                //Método do update no C# com mongo
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"Autor": novoAutor});
 
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Autor": novoAutor});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Autor, novoAutor);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);            
         }
 
+
+        //Método para atualizar o ano, conforme o livro escolhido pelo usuário
         public async void AtualizarAnoLivro(int codigo, int novoAno)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+            //Método do update no C# com mongo                
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-            foreach (var doc in listaLivros)
-            {
-                doc.Ano = novoAno;
-                //Método do update no C# com mongo                
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
-
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Ano": novoAno});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"Ano": novoAno});
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Ano, novoAno);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);            
         }
 
+
+        //Método para atualizar a quantidade de páginas, conforme o livro escolhido pelo usuário
         public async void AtualizarQPaginasLivro(int codigo, int novaQuantidade)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+            //Método do update no C# com mongo                
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-            foreach (var doc in listaLivros)
-            {
-                doc.Paginas = novaQuantidade;
-                //Método do update no C# com mongo                
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
-
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Ano": novoAno});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"Paginas": novaQuantidade});
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Paginas, novaQuantidade);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);            
         }
 
+
+        //Método para atualizar a quantidade disponível, conforme o livro escolhido pelo usuário
         public async void AtualizarQDisponivelLivro(int codigo, int novaQuantidade)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+            //Método do update no C# com mongo                
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-            foreach (var doc in listaLivros)
-            {
-                doc.QuantidadeDisponivel = novaQuantidade;
-                //Método do update no C# com mongo                
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
-
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Ano": novoAno});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"QuantidadeDisponivel": novaQuantidade});
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.QuantidadeDisponivel, novaQuantidade);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);
         }
 
+
+        //Método para atualizar o Valor do Aluguel, conforme o livro escolhido pelo usuário
         public async void AtualizarValorAluguelLivro(int codigo, int novoValor)
         {
             var construtor = Builders<Livro>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLivro, codigo);
 
-            var listaLivros = await conexao.Livro.Find(condicao).ToListAsync();
+            //Método do update no C# com mongo                
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-            foreach (var doc in listaLivros)
-            {
-                doc.ValorAluguel = novoValor;
-                //Método do update no C# com mongo                
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
-
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Ano": novoAno});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"ValorAluguel": novoAno});
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.ValorAluguel, novoValor);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);
         }
 
+
+        //Método para atualizar o assunto, conforme o livro escolhido pelo usuário
         public async void AtualizarAssuntoLivro(int codigo, string novosAssuntos)
         {
             var construtor = Builders<Livro>.Filter;
@@ -481,15 +474,13 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 vetAssunto2.Add(vetAssunto[i].Trim());
             }
 
-            foreach (var doc in listaLivros)
-            {
-                doc.Assunto = vetAssunto2;
-                //Método do update no C# com mongo                
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+            //Método do update no C# com mongo                
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-                //db.Livro.update("CodigoLivro": codigo, {"$set": {"Assunto": ["Assunto"]});
-                await conexao.Livro.ReplaceOneAsync(condicao, doc);
-            }
+            //db.Livro.update("CodigoLivro": codigo, {"$set": {"Assunto": ["Assunto"]});
+            var construtorAlteracao = Builders<Livro>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Assunto, vetAssunto2);
+            await conexao.Livro.UpdateOneAsync(condicao, condicaoAlteracao);            
         }
     }
 }

@@ -89,26 +89,24 @@ namespace CRUD_Mongo_Biblioteca.Controller
                         Thread.Sleep(2000);
                         ExcluiLeitor(codigo);
                         Thread.Sleep(2000);
+                        Console.WriteLine("Registros excluídos com sucesso!");
                     }
                     else
                     {
                         Console.WriteLine("Retornando ao menu...");
-                        Console.WriteLine("Pressione qualquer tecla para continuar");
-                        Console.ReadKey();
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Excluindo Registro...");
                     ExcluiLeitor(codigo);
                     Thread.Sleep(2000);
-                    Console.WriteLine("Registro excluido com sucesso! \nPressione qualquer tecla para continuar...");
-                    Console.ReadKey();
+                    Console.WriteLine("Registro excluido com sucesso!");
                 }
             }
-            Console.WriteLine("Retornando ao menu de opções...");
-            Console.WriteLine("Pressione qualquer tecla para continuar... ");
-            Console.ReadKey();
+            else
+            {
+                Console.WriteLine("Retornando ao menu de opções...");
+            }            
         }
 
         //Função para excluir leitor
@@ -119,8 +117,6 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             Console.WriteLine("Excluindo Leitor...");
             conexao.Leitor.DeleteOneAsync(condicao);
-            Console.WriteLine("Leitor excluido com sucesso! \nPressione qualquer tecla para continuar... ");
-            Console.ReadKey();
         }
 
         //Verifica se o leitor que o usuário está tentando excluir existe em algum aluguel de livros
@@ -130,7 +126,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             var construtor = Builders<Aluguel>.Filter;
             var condicao = construtor.Eq(x => x.CodigoLeitor, codigo);
 
-            var listaLeitor = conexao.Aluguel.Find(new BsonDocument()).ToListAsync();
+            var listaLeitor = conexao.Aluguel.Find(condicao).ToListAsync();
 
             if (listaLeitor.Result.Any())
             {
@@ -150,23 +146,15 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             var listaLivros = conexao.LivroAluguel.Find(condicao).ToListAsync();
 
-            Console.WriteLine("Excluindo Livros de Aluguel");
+            Console.WriteLine("Excluindo Livros de Aluguel vinculados ao Leitor");
             Console.WriteLine();
             conexao.LivroAluguel.DeleteManyAsync(condicao);
-            Console.WriteLine("Livros de Aluguel vinculados ao leitor excluidos com sucesso!");
-            Console.WriteLine("Pressione qualquer tecla para continuar... ");
-            Console.ReadKey();
 
             var construtor1 = Builders<Aluguel>.Filter;
             var condicao1 = construtor1.Eq(x => x.CodigoLeitor, codigo);
 
-            Console.WriteLine("Excluindo Aluguel");
+            Console.WriteLine("Excluindo Aluguel vinculado ao Leitor");
             conexao.Aluguel.DeleteManyAsync(condicao1);
-
-            Console.WriteLine("Aluguel Excluido com sucesso!");
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
-
         }
 
         //Menu para alterar leitores
