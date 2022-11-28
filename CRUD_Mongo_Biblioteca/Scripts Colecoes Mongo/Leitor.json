@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "637bb8a6200871241baac875"
+  },
+  "CodigoLeitor": 1,
+  "Nome": "Luiz Inacio Squid Da Silva",
+  "Cpf": "03104501313"
+},{
+  "_id": {
+    "$oid": "637bb8d0200871241baac876"
+  },
+  "CodigoLeitor": 2,
+  "Nome": "Jhow Bidden",
+  "Cpf": "12365478930"
+}]
