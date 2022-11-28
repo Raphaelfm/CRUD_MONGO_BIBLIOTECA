@@ -66,11 +66,6 @@ namespace CRUD_Mongo_Biblioteca.Controller
                     running = false;
                 }
             }
-
-
-
-            Console.Write("Pressione qualquer tecla para continuar: ");
-            Console.ReadKey();
         }
 
         //Chama um relatório para livros alugados
@@ -400,6 +395,8 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoTituloLivro);
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorUnitarioLivro);
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorTotalLivro);
+
+                ValorTotalAluguel(codigoAluguel);
             }
         }
 
@@ -441,6 +438,8 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorUnitarioLivro);
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoQuantidade);
                 await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorTotalLivro);
+
+                ValorTotalAluguel(codigoAluguel);
             }
         }
 
