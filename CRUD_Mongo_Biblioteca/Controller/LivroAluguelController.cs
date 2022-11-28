@@ -18,6 +18,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
         //private Aluguel aluguel = new Aluguel();
         //private AluguelController alugueis = new AluguelController();
 
+        //Método para inserir novos livros em aluguel
         public void CadastrarLivroAluguel()
         {
             bool running = true;
@@ -72,6 +73,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        //Chama um relatório para livros alugados
         public async void RelatorioLivrosAlugados()
         {
             Console.WriteLine("Listando Documentos");
@@ -87,6 +89,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        //Menu para remoção de livros alugados
         public void RemoveLivroAluguel()
         {
             AplicaNulos();
@@ -125,6 +128,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }            
         }
 
+        //Método para remover os livros de Aluguel
         public void ExcluiLivro(int codigo, int codigoAluguel)
         {
             var construtor = Builders<LivroAluguel>.Filter;
@@ -174,6 +178,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        //Conta a quantidade de registros existentes dentro da entidade LivroAluguel
         public int ContaEntidadeLivroAluguel()
         {
             int quantidadeAluguel = 0;
@@ -182,6 +187,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return quantidadeAluguel;
         }
 
+        //Lista os livros cadastrados
         public async void ListarLivros()
         {
             var listaLivros = await conexao.Livro.Find(new BsonDocument())
@@ -193,6 +199,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        //Pega o código do ultimo aluguel cadastrado para fazer a inclusão de livros no momento em que o usuário estiver registrando um Aluguel
         public async Task<int> PegaCodigoAluguel()
         {
             int codigo = 1;
@@ -207,6 +214,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return codigo;
         }
 
+        //Pega o código do leitor vinculado ao ultimo aluguel para fazer a inclusão no momento em que o usuário estiver registrando um Aluguel
         public async Task<int> PegaCodigoLeitorl()
         {
             int codigo = 1;
@@ -221,6 +229,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return codigo;
         }
 
+        //Pega os valores dos livros dentro da entidade livro para registrar no aluguel
         public async Task<double> PegaValorLivro(int codigo)
         {
             var construtor = Builders<Livro>.Filter;
@@ -237,6 +246,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return valor;
         }
 
+        //Menu de alterações
         //Por lógica, decidimos deixar o usuário alterar apenas o livro. Pois o mesmo pode alterar o leitor através de Aluguel
         public void AlteraLivroAluguel()
         {
@@ -325,6 +335,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        //Pega o título do livro para inserir dentro do aluguel
         public async Task<string> PegaTituloLivro(int codigo)
         {
             var construtor = Builders<Livro>.Filter;
@@ -341,6 +352,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return titulo;
         }
 
+        //Limpa os atributos aplicando nulo
         public void AplicaNulos()
         {
             itemAluguel.Id = null;
@@ -353,6 +365,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             itemAluguel.ValorTotalLivro = null;
         }
 
+        //Método para atualizar o livro dentro de aluguel, conforme os novos dados informados pelo usuário, sem alterar a quantidade alugada
         public async void AtualizarLivro(int codigo, int novoLivro,int codigoAluguel)
         {            
             var construtor = Builders<LivroAluguel>.Filter;
@@ -376,10 +389,21 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"Titulo": doc.Titulo});
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"ValorUnitarioLivro": doc.ValorUnitarioLivro});
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"ValorTotalLivro": doc.ValorTotalLivro});
-                await conexao.LivroAluguel.ReplaceOneAsync(condicao, doc);
+
+                var construtorAlteracaoLivroAluguel = Builders<LivroAluguel>.Update;
+                var condicaoAlteracaoCodigoLivro = construtorAlteracaoLivroAluguel.Set(x => x.CodigoLivro, doc.CodigoLivro);
+                var condicaoAlteracaoTituloLivro = construtorAlteracaoLivroAluguel.Set(x => x.Titulo, doc.Titulo);
+                var condicaoAlteracaoValorUnitarioLivro = construtorAlteracaoLivroAluguel.Set(x => x.ValorUnitarioLivro, doc.ValorUnitarioLivro);
+                var condicaoAlteracaoValorTotalLivro = construtorAlteracaoLivroAluguel.Set(x => x.ValorTotalLivro, doc.ValorTotalLivro);
+
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoCodigoLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoTituloLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorUnitarioLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorTotalLivro);
             }
         }
 
+        //Método para atualizar o livro dentro de aluguel, conforme os novos dados informados pelo usuário, alterando a quantidade alugada
         public async void AtualizarLivroQuantidade(int codigo, int novoLivro1, int novaQuantidade, int codigoAluguel)
         {
             var construtor = Builders<LivroAluguel>.Filter;
@@ -404,10 +428,23 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"Titulo": doc.Titulo});
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"ValorUnitarioLivro": doc.ValorUnitarioLivro});
                 //db.Livro.update("CodigoLivro": novoLivro, {"$set": {"ValorTotalLivro": doc.ValorTotalLivro});
-                await conexao.LivroAluguel.ReplaceOneAsync(condicao, doc);
+
+                var construtorAlteracaoLivroAluguel = Builders<LivroAluguel>.Update;
+                var condicaoAlteracaoCodigoLivro = construtorAlteracaoLivroAluguel.Set(x => x.CodigoLivro, doc.CodigoLivro);
+                var condicaoAlteracaoTituloLivro = construtorAlteracaoLivroAluguel.Set(x => x.Titulo, doc.Titulo);
+                var condicaoAlteracaoValorUnitarioLivro = construtorAlteracaoLivroAluguel.Set(x => x.ValorUnitarioLivro, doc.ValorUnitarioLivro);
+                var condicaoAlteracaoQuantidade = construtorAlteracaoLivroAluguel.Set(x => x.QuantidadeLivro, doc.QuantidadeLivro);
+                var condicaoAlteracaoValorTotalLivro = construtorAlteracaoLivroAluguel.Set(x => x.ValorTotalLivro, doc.ValorTotalLivro);
+
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoCodigoLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoTituloLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorUnitarioLivro);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoQuantidade);
+                await conexao.LivroAluguel.UpdateOneAsync(condicao, condicaoAlteracaoValorTotalLivro);
             }
         }
 
+        //Chama relatório de livros cadastradas para auxiliar o usuário
         public async void RelatorioLivros()
         {
             Console.WriteLine("Listando Documentos");
@@ -423,6 +460,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        //Atualiza o valor total de alguel dentro de Aluguel
         public async void ValorTotalAluguel(int codigo)
         {
             double? valorTotal = 0;
