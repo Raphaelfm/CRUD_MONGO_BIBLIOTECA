@@ -16,6 +16,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
         private Leitor leitor = new Leitor();
         private ConexaoBancoMongo conexao = new ConexaoBancoMongo();
 
+        //Cadastra novos leitores
         public void CadastrarLeitor()
         {
             AplicaNulos();
@@ -39,6 +40,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        //Chama um relatório com leitores
         public async void RelatorioLeitores()
         {
             Console.WriteLine("Listando Documentos");
@@ -54,6 +56,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.WriteLine("Fim da lista...");
         }
 
+        //Menu para remover leitores
         public void RemoverLeitores()
         {
             AplicaNulos();
@@ -108,6 +111,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             Console.ReadKey();
         }
 
+        //Função para excluir leitor
         public void ExcluiLeitor(int codigo)
         {
             var construtor = Builders<Leitor>.Filter;
@@ -165,6 +169,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
         }
 
+        //Menu para alterar leitores
         public void AlteraLeitor()
         {
             int opcao = 0;
@@ -209,7 +214,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
                         Console.WriteLine("Registro atualizado com sucesso!");
                         Console.Write("Pressione qualquer tecla para continuar... ");
                         Console.ReadKey();
-                        break;                    
+                        break;
                     case 3:
                         Console.WriteLine("Voltando para o menu de opções...");
                         Thread.Sleep(2000);
@@ -240,6 +245,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
         }
 
+        //Gera um código para cada leitor cadastrado em ordem crescente
         public async Task<int> GeraCodigoAsync()
         {
             int codigo = 1;
@@ -254,6 +260,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return codigo;
         }
 
+        //Conta a quantidade de registros na entidade leitor
         public int ContaEntidadeLeitor()
         {
             int quantidadeLeitor = 0;
@@ -262,6 +269,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             return quantidadeLeitor;
         }
 
+        //Limpa os atributos atribuindo nulos
         private void AplicaNulos()
         {
             leitor.Id = null;
@@ -270,6 +278,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             leitor.Cpf = null;
         }
 
+        //Atualiza o nome do leitor dentro da tabela leitor
         public async void AtualizarNomeLeitor(int codigo, string novoNome)
         {
             var construtor = Builders<Leitor>.Filter;
@@ -284,11 +293,17 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
                 //db.Livro.update("CodigoLeitor": codigo, {"$set": {"Nome": novoNome});
-                await conexao.Leitor.ReplaceOneAsync(condicao, doc);
+
+                var construtorAlteracao = Builders<Leitor>.Update;
+                var condicaoAlteracao = construtorAlteracao.Set(x => x.Nome, novoNome);
+                await conexao.Leitor.UpdateOneAsync(condicao, condicaoAlteracao);
+
+                //Invoca método para alterar o nome do leitor em outras entidades que o Leitor esteja vinculado
                 AlteraNomeLeitorAluguel(codigo, novoNome);
             }
         }
 
+        //Atualiza o cpf do leitor dentro da tabela leitor
         public async void AtualizarCpfLeitor(int codigo, string novoCpf)
         {
             var construtor = Builders<Leitor>.Filter;
@@ -296,18 +311,22 @@ namespace CRUD_Mongo_Biblioteca.Controller
 
             var listaLeitores = await conexao.Leitor.Find(condicao).ToListAsync();
 
-            foreach (var doc in listaLeitores)
-            {
-                doc.Cpf = novoCpf;
-                //Método do update no C# com mongo
-                //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
 
-                //db.Livro.update("CodigoLeitor": codigo, {"$set": {"Nome": novoNome});
-                await conexao.Leitor.ReplaceOneAsync(condicao, doc);
-                AlteraCpfLeitorAluguel(codigo, novoCpf);
-            }
+            //Método do update no C# com mongo
+            //Vou inserir o comando aqui demonstrando o tratamento do mesmo.
+
+            //db.Livro.update("CodigoLeitor": codigo, {"$set": {"Nome": novoNome});
+
+            var construtorAlteracao = Builders<Leitor>.Update;
+            var condicaoAlteracao = construtorAlteracao.Set(x => x.Cpf, novoCpf);
+
+            await conexao.Leitor.UpdateOneAsync(condicao, condicaoAlteracao);
+
+            //Invoca método para alterar o cpf do leitor em outras entidades que o leitor esteja vinculado
+            AlteraCpfLeitorAluguel(codigo, novoCpf);
         }
 
+        //Atualiza o nome do leitor dentro de Aluguel
         public async void AlteraNomeLeitorAluguel(int codigoLeitor, string? nome)
         {
             var construtor = Builders<Aluguel>.Filter;
@@ -318,6 +337,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             await conexao.Aluguel.UpdateManyAsync(condicao, condicaoAlteracao);
         }
 
+        //Atualiza o cpf do leitor dentro de Aluguel
         public async void AlteraCpfLeitorAluguel(int codigoLeitor, string? cpf)
         {
             var construtor = Builders<Aluguel>.Filter;
