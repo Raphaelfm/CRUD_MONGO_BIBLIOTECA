@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "637f997c8c53b154c87cb0e7"
+  },
+  "CodigoAluguel": 1,
+  "CodigoLeitor": 2,
+  "Cpf": "12365478930",
+  "Nome": "Jhow Bidden",
+  "ValorTotal": 0
+},{
+  "_id": {
+    "$oid": "637f9b2f476ca77e8ed902c2"
+  },
+  "CodigoAluguel": 2,
+  "CodigoLeitor": 2,
+  "Cpf": "12365478930",
+  "Nome": "Jhow Bidden",
+  "ValorTotal": 0
+}]

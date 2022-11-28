@@ -1,0 +1,107 @@
+[{
+  "_id": {
+    "$oid": "637b8d7fa55734482aec5c3e"
+  },
+  "CodigoLivro": 1,
+  "Titulo": "Sob a Redoma",
+  "Autor": "Stephan King",
+  "Ano": 2012,
+  "Paginas": 679,
+  "QuantidadeDisponivel": 5,
+  "ValorAluguel": 10.99,
+  "Assunto": [
+    "Ficção Científica",
+    "Ficção Científica",
+    "Ação"
+  ]
+},{
+  "_id": {
+    "$oid": "637b90d30159b0f75d1d082a"
+  },
+  "CodigoLivro": 3,
+  "Titulo": "Dom Casmurro",
+  "Autor": "Machado de Assis",
+  "Ano": 1923,
+  "Paginas": 188,
+  "QuantidadeDisponivel": 20,
+  "ValorAluguel": 9.99,
+  "Assunto": [
+    "Romance",
+    "Literatura  Brasileira"
+  ]
+},{
+  "_id": {
+    "$oid": "637b9357fd08e67defb00c84"
+  },
+  "CodigoLivro": 4,
+  "Titulo": "A Arte da Ficção",
+  "Autor": "David Lodge",
+  "Ano": 2002,
+  "Paginas": 230,
+  "QuantidadeDisponivel": 5,
+  "ValorAluguel": 4.59,
+  "Assunto": [
+    "Didático",
+    "Auto Ajuda"
+  ]
+},{
+  "_id": {
+    "$oid": "637b9e1706188822ab7ff4fe"
+  },
+  "CodigoLivro": 5,
+  "Titulo": "A Dança com os Dragões",
+  "Autor": "George R R Martin",
+  "Ano": 2011,
+  "Paginas": 934,
+  "QuantidadeDisponivel": 6,
+  "ValorAluguel": 11.99,
+  "Assunto": [
+    "Fantasia",
+    "Ação"
+  ]
+},{
+  "_id": {
+    "$oid": "637ba1486e101e0f9201f6ef"
+  },
+  "CodigoLivro": 6,
+  "Titulo": "A Tormenta das Espadas",
+  "Autor": "George R R Martin",
+  "Ano": 2006,
+  "Paginas": 1276,
+  "QuantidadeDisponivel": 30,
+  "ValorAluguel": 7.49,
+  "Assunto": [
+    "Fantasia",
+    "Ação"
+  ]
+},{
+  "_id": {
+    "$oid": "637ba2196b58be5a7205f363"
+  },
+  "CodigoLivro": 7,
+  "Titulo": "Memórias Póstumas de Brás Cubas",
+  "Autor": "Machado de Assis",
+  "Ano": 1915,
+  "Paginas": 267,
+  "QuantidadeDisponivel": 50,
+  "ValorAluguel": 6.99,
+  "Assunto": [
+    "Literatura Brasileira"
+  ]
+},{
+  "_id": {
+    "$oid": "637ba33d6b58be5a7205f365"
+  },
+  "CodigoLivro": 9,
+  "Titulo": "O Pequeno Principe",
+  "Autor": "Antoine de Saint-Exupéry",
+  "Ano": 1943,
+  "Paginas": 93,
+  "QuantidadeDisponivel": 20,
+  "ValorAluguel": 15.89,
+  "Assunto": [
+    "Infantil",
+    "Literatura",
+    "Clássico"
+  ]
+}]

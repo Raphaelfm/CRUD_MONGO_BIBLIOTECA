@@ -1,0 +1,23 @@
+[{
+  "_id": {
+    "$oid": "637f9b40476ca77e8ed902c3"
+  },
+  "CodigoAluguel": 2,
+  "CodigoLeitor": 2,
+  "QuantidadeLivro": 1,
+  "CodigoLivro": 4,
+  "Titulo": "A Arte da Ficção",
+  "ValorUnitarioLivro": 4.59,
+  "ValorTotalLivro": 4.59
+},{
+  "_id": {
+    "$oid": "637f9b4f476ca77e8ed902c4"
+  },
+  "CodigoAluguel": 2,
+  "CodigoLeitor": 2,
+  "QuantidadeLivro": 1,
+  "CodigoLivro": 3,
+  "Titulo": "Dom Casmurro",
+  "ValorUnitarioLivro": 9.99,
+  "ValorTotalLivro": 9.99
+}]
