@@ -11,7 +11,7 @@ namespace CRUD_Mongo_Biblioteca.Conexao
 {
     public class ConexaoBancoMongo
     {
-        public const string STRING_DE_CONEXAO = "mongodb://localhost:27017";
+        public const string STRING_DE_CONEXAO = "mongodb://labdatabase:labDatabase2022@localhost:27017";
         public const string NOME_DA_BASE = "SistemaBiblioteca";
         public const string NOME_DA_COLECAO_1 = "Livros";
         public const string NOME_DA_COLECAO_2 = "Leitor";
