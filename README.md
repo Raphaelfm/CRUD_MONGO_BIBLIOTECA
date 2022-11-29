@@ -22,5 +22,8 @@ Vá até a pasta models, Abra a classe ConexãoBanco, aponte as configurações 
 na loja do visual studio instalar: c# .NET Extension Pack
 
 Coloque a seguinte string de conexão no Linux: string stringConexao = "mongodb://labdatabase:labDatabase2022@localhost:27017";
+
+
 Ao baixar  o projeto no linux, também será necessário instalar o driver para rodar a conexão com o mongodb.
+
 Abra a pasta CRUD_Mongo_Biblioteca que contém o arquivo Program.cs, abra um novo terminal e rode o seguinte comando para instalar o mongodb.driver: dotnet add package MongoDB.Driver --version 2.18.0 
