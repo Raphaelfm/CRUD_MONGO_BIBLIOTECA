@@ -10,7 +10,7 @@ using MongoDB.Driver;
 using DnsClient.Internal;
 
 namespace CRUD_Mongo_Biblioteca.Controller
-{    
+{
     public class AluguelController
     {
         private Aluguel aluguel = new Aluguel();
@@ -72,7 +72,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             }
 
             Console.WriteLine("Fim da lista...");
-        }
+        }    
 
         //Menu para remover alugueis
         public void RemoveAluguel()
@@ -102,12 +102,12 @@ namespace CRUD_Mongo_Biblioteca.Controller
                     ExcluiAluguel(codigo);
                     Thread.Sleep(2000);
                     Console.WriteLine("Registro excluído com sucesso!");
-                }                
+                }
             }
             else
             {
                 Console.WriteLine("Retornando ao menu de opções...");
-            }            
+            }
         }
 
         //Método para excluir um aluguel conforme solicitado pelo usuário
@@ -163,7 +163,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
                         Console.WriteLine("Registro atualizado com sucesso!");
                         Console.Write("Pressione qualquer tecla para continuar... ");
                         Console.ReadKey();
-                        break;                    
+                        break;
                     case 2:
                         Console.WriteLine("Voltando para o menu de opções...");
                         Thread.Sleep(2000);
@@ -225,14 +225,14 @@ namespace CRUD_Mongo_Biblioteca.Controller
             int quantidade = leitores.ContaEntidadeLeitor();
             foreach (var doc in listaLeitores)
             {
-                Console.WriteLine($"Codigo Leitor: {doc.CodigoLeitor} | Nome Leitor: {doc.Nome} | CPF Leitor: {doc.Cpf}");                  
+                Console.WriteLine($"Codigo Leitor: {doc.CodigoLeitor} | Nome Leitor: {doc.Nome} | CPF Leitor: {doc.Cpf}");
             }
-        }       
+        }
 
         public void ListarLeitoresAsync()
         {
             ListaLeitores();
-        }        
+        }
 
         //Pega o cpf do leitor na entidade Leitor, o usuário precisa apenas informar o código do leitor
         public async Task<string> PegaCpfLeitor(int codigo)
@@ -243,7 +243,7 @@ namespace CRUD_Mongo_Biblioteca.Controller
             var listaLeitores = await conexao.Leitor.Find(condicao)
                                                            .ToListAsync();
 
-            foreach(var doc in listaLeitores)
+            foreach (var doc in listaLeitores)
             {
                 cpf = doc.Cpf;
             }
@@ -306,8 +306,23 @@ namespace CRUD_Mongo_Biblioteca.Controller
                 var condicaoAlteracaoLeitorCpf = construtorAlteracaoLeitor.Set(x => x.Cpf, doc.Cpf);
                 await conexao.Aluguel.UpdateOneAsync(condicao, condicaoAlteracaoLeitorCpf);
             }
-
-            
         }
+
+        //Traz o GrouBy, trazendo o total em valor total alugado por fornecedor Leitor
+        public async void RelatorioAgrupado()
+        {
+            // BsonArray? agrupamento = new BsonArray { new BsonDocument("$group", new BsonDocument { { "_id", "$Nome" }, { "Total", new BsonDocument("$sum", "$ValorTotal") } }) };
+            var valorTotal = await conexao.Aluguel.Aggregate().Group( new BsonDocument{
+                                                                                    { "_id", "$Nome" },
+                                                                                    { "Total",
+                                                                            new BsonDocument("$sum", "$ValorTotal") }}).ToListAsync();
+
+            //Console.WriteLine(valorTotal);
+            foreach (var doc in valorTotal)
+            {
+               Console.WriteLine(doc.ToString());
+            }
+            //Console.WriteLine(valorTotal);
+        }        
     }
 }
