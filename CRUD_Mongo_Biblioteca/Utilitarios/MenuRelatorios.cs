@@ -28,7 +28,8 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                 Console.WriteLine("2 - Relatório de Leitores cadastrados");
                 Console.WriteLine("3 - Relatório de Aluguel");
                 Console.WriteLine("4 - Relatório de Livros Alugados");
-                Console.WriteLine("5 - Retornar ao menu principal");
+                Console.WriteLine("5 - Relatório Agrupado (GroupBy), Total valor alugueis por Leitor");
+                Console.WriteLine("6 - Retornar ao menu principal");
                 opcao = int.Parse(Console.ReadLine());
 
                 switch (opcao)
@@ -58,6 +59,12 @@ namespace CRUD_Mongo_Biblioteca.Utilitarios
                         Console.ReadKey();
                         break;
                     case 5:
+                        aluguel.RelatorioAgrupado();
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Pressione qualquer tecla para limpar a tela e continuar");
+                        Console.ReadKey();
+                        break;
+                    case 6:
                         Console.WriteLine("Retornando ao menu principal...");
                         running = false;
                         break;
